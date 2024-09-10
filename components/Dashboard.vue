@@ -33,6 +33,7 @@ export default {
   },
   data() {
     return {
+      isLoggedIn: false,  // Inicializamos la variable en false
       blogComponents: [
         {
           title: 'Mi Primer Blog',
@@ -41,9 +42,10 @@ export default {
       ]
     };
   },
-  computed: {
-    isLoggedIn() {
-      return !!localStorage.getItem('token');
+  mounted() {
+    // Solo accedemos a localStorage cuando el componente está montado (en el cliente)
+    if (process.client) {
+      this.isLoggedIn = !!localStorage.getItem('token');
     }
   },
   methods: {
@@ -60,8 +62,10 @@ export default {
       }
     },
     logout() {
-      localStorage.removeItem('token');
-      this.$router.push('/login');
+      if (process.client) {
+        localStorage.removeItem('token');
+        this.$router.push('/login');
+      }
     }
   }
 }

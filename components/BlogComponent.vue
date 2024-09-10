@@ -1,6 +1,6 @@
 <template>
   <div class="blog-component">
-    <img :src="logoUrl" alt="Blog Logo" class="logo" />
+    <img src="logoUrl" alt="Blog Logo" class="logo" />
     <h1>{{ title }}</h1>
     <div class="content-area">
       <slot></slot> <!-- Esto permitirá que el contenido sea dinámico -->
@@ -15,18 +15,20 @@
 <script>
 export default {
   props: {
-    logoUrl: {
-      type: String,
-      default: '/default-logo.png' // Puedes cambiar la URL por tu logo
-    },
     title: {
       type: String,
       default: 'BLOG'
     }
   },
-  computed: {
-    isLoggedIn() {
-      return !!localStorage.getItem('token');
+  data() {
+    return {
+      isLoggedIn: false // Inicializamos la variable
+    };
+  },
+  mounted() {
+    // Solo accedemos a localStorage cuando el componente está montado (en el cliente)
+    if (process.client) {
+      this.isLoggedIn = !!localStorage.getItem('token');
     }
   },
   methods: {
@@ -34,7 +36,7 @@ export default {
       alert('Editando contenido...');
     },
     deleteContent() {
-      this.$emit('delete'); // Emitir el evento de borrado al padre
+      this.$emit('delete');
     }
   }
 }
