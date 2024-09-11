@@ -1,13 +1,9 @@
 <template>
   <div class="blog-component">
-    <img src="logoUrl" alt="Blog Logo" class="logo" />
+    <img :src="logoUrl" alt="Blog Logo" class="logo" />
     <h1>{{ title }}</h1>
     <div class="content-area">
       <slot></slot> <!-- Esto permitirá que el contenido sea dinámico -->
-    </div>
-    <div v-if="isLoggedIn" class="buttons">
-      <button @click="editContent">Editar</button>
-      <button @click="deleteContent">Borrar</button>
     </div>
   </div>
 </template>
@@ -22,21 +18,13 @@ export default {
   },
   data() {
     return {
-      isLoggedIn: false // Inicializamos la variable
+      logoUrl: '/path/to/your/logo.png', // Asegúrate de usar una URL válida
+      isLoggedIn: false
     };
   },
   mounted() {
-    // Solo accedemos a localStorage cuando el componente está montado (en el cliente)
     if (process.client) {
       this.isLoggedIn = !!localStorage.getItem('token');
-    }
-  },
-  methods: {
-    editContent() {
-      alert('Editando contenido...');
-    },
-    deleteContent() {
-      this.$emit('delete');
     }
   }
 }

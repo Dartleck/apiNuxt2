@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <h1>Login</h1>
-    <form @submit.prevent="handleLogin">
+    <form @submit.prevent="login">
       <div class="form-group">
         <label for="email">Email:</label>
         <input type="email" v-model="email" id="email" required />
@@ -25,26 +25,22 @@ export default {
       error: null
     };
   },
-methods: {
-  async handleLogin() {
-    try {
-      const response = await this.$axios.post('/login', {
-        email: this.email,
-        password: this.password
-      });
-      if (response.data.token) {
-        // Guardar el token en el localStorage
-        localStorage.setItem('token', response.data.token);
-        // Redirigir al dashboard
-        this.$router.push('/dashboard');
+  methods: {
+    async login() {
+      try {
+        await this.$auth.loginWith('laravelSanctum', {
+          data: {
+            email: this.email,
+            password: this.password,
+          },
+        });
+        this.$router.push('/dashboard'); // Redirige después del login exitoso
+      } catch (error) {
+        this.error = 'Credenciales inválidas. Intenta de nuevo.';
       }
-    } catch (error) {
-      this.error = 'Credenciales inválidas. Intenta de nuevo.';
     }
   }
 }
-
-};
 </script>
 
 <style scoped>

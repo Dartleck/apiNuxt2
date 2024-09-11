@@ -38,12 +38,23 @@ export default {
   */
   modules: [
     '@nuxtjs/axios', // Agregamos el módulo de Axios
+    '@nuxtjs/auth-next',
   ],
   /*
   ** Axios module configuration
   */
   axios: {
-    baseURL: 'http://localhost:8000/api', // Configura la URL base del API de Laravel
+    baseURL: 'http://localhost:8000/api', 
+    
+    credentials: true,
+  },
+  auth: {
+    strategies: {
+      laravelSanctum: {
+        provider: 'laravel/sanctum',
+        url: 'http://localhost:8000',
+      },
+    },
   },
   /*
   ** Build configuration
