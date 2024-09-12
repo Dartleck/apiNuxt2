@@ -61,36 +61,12 @@ export default {
     this.fetchUser();
   },
   methods: {
-    // Manejar el login
-    async handleLogin() {
-      try {
-        // Obtener el token CSRF de Sanctum
-        await this.$axios.get('http://localhost:8000/sanctum/csrf-cookie');
-
-        // Hacer la solicitud de login
-        const response = await this.$axios.post('http://localhost:8000/login', {
-          email: this.email,
-          password: this.password
-        });
-
-        if (response.data.token) {
-          // Guardar el token y el user_id en localStorage
-          localStorage.setItem('token', response.data.token);
-          localStorage.setItem('user_id', response.data.user.id);
-          // Redirigir al dashboard
-          this.$router.push('/dashboard');
-        }
-      } catch (error) {
-        this.error = 'Credenciales inválidas. Intenta de nuevo.';
-      }
-    },
-
     // Obtener los blogs
     async fetchBlogs() {
       try {
         const response = await this.$axios.get('http://localhost:8000/api/blogs', {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
+            Authorization: `Bearer ${localStorage.getItem('token')}` // Enviar token en los headers
           }
         });
         this.blogComponents = response.data.map(blog => ({ ...blog, isEditing: false }));
@@ -109,7 +85,7 @@ export default {
       try {
         const response = await this.$axios.post('http://localhost:8000/api/blogs', newBlog, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
+            Authorization: `Bearer ${localStorage.getItem('token')}` // Enviar token en los headers
           }
         });
         this.blogComponents.push({ ...response.data, isEditing: false });
@@ -124,7 +100,7 @@ export default {
         try {
           await this.$axios.delete(`http://localhost:8000/api/blogs/${id}`, {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`
+              Authorization: `Bearer ${localStorage.getItem('token')}` // Enviar token en los headers
             }
           });
           this.blogComponents.splice(index, 1); // Eliminar el blog de la lista en el frontend
@@ -152,7 +128,7 @@ export default {
           content: updatedBlog.content
         }, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
+            Authorization: `Bearer ${localStorage.getItem('token')}` // Enviar token en los headers
           }
         });
         this.blogComponents[index] = { ...response.data, isEditing: false }; // Guardar y salir de modo de edición
@@ -175,7 +151,7 @@ export default {
       try {
         const response = await this.$axios.get('http://localhost:8000/api/user', {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
+            Authorization: `Bearer ${localStorage.getItem('token')}` // Enviar token en los headers
           }
         });
         localStorage.setItem('user_id', response.data.id); // Guardar el ID del usuario autenticado

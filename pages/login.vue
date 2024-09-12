@@ -28,13 +28,21 @@ export default {
   methods: {
     async login() {
       try {
-        await this.$auth.loginWith('laravelSanctum', {
-          data: {
-            email: this.email,
-            password: this.password,
-          },
+        // Obtener el token CSRF antes de hacer login
+        await this.$axios.get('http://localhost:8000/sanctum/csrf-cookie');
+
+        // Hacer la solicitud de login
+        const response = await this.$axios.post('http://localhost:8000/api/login', {
+          email: this.email,
+          password: this.password,
         });
-        this.$router.push('/dashboard'); // Redirige después del login exitoso
+
+        if (response.data.token) {
+          // Guardar el token en localStorage
+          localStorage.setItem('token', response.data.token);
+          // Redirigir al dashboard después del login exitoso
+          this.$router.push('/dashboard');
+        }
       } catch (error) {
         this.error = 'Credenciales inválidas. Intenta de nuevo.';
       }
