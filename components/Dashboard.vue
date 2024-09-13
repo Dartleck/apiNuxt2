@@ -63,17 +63,18 @@ export default {
   methods: {
     // Obtener los blogs
     async fetchBlogs() {
-      try {
-        const response = await this.$axios.get('http://localhost:8000/api/blogs', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}` // Enviar token en los headers
-          }
-        });
-        this.blogComponents = response.data.map(blog => ({ ...blog, isEditing: false }));
-      } catch (error) {
-        console.error('Error fetching blogs:', error);
+  try {
+    const response = await this.$axios.get('http://localhost:8000/api/blogs', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
       }
-    },
+    });
+    this.blogComponents = response.data;
+  } catch (error) {
+    console.error('Error fetching blogs:', error);
+  }
+}
+,
 
     // Agregar un nuevo blog
     async addBlogComponent() {
@@ -168,3 +169,4 @@ export default {
   }
 }
 </script>
+  

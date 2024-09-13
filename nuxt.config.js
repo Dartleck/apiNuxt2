@@ -44,38 +44,32 @@ export default {
   ** Axios module configuration
   */
   axios: {
-    baseURL: 'http://localhost:8000/api', 
-    
+    baseURL: 'http://localhost:8000/', 
     credentials: true,
   },
   auth: {
     strategies: {
       laravelSanctum: {
         provider: 'laravel/sanctum',
-        url: 'http://localhost:8000',  // URL de tu backend
+        url: 'http://localhost:8000',
         endpoints: {
-          login: {
-            url: '/api/login', // La ruta de login
-          },
-          logout: {
-            url: '/api/logout', // Ruta de logout (deberías implementarla)
-          },
-          user: {
-            url: '/api/user', // Ruta para obtener el usuario autenticado
-          }
+          login: { url: '/login', method: 'post' },
+          logout: { url: '/logout', method: 'post' },
+          user: { url: '/user', method: 'get' }
         },
-        token: {
-          property: 'token', // Propiedad donde está el token
-        },
-        user: {
-          property: 'user', // Propiedad donde está el usuario
-        },
-        cookie: {
-          name: 'XSRF-TOKEN',
-        },
+        tokenRequired: false,
+        tokenType: false,
+        withCredentials: true,
       },
     },
-  },
+    redirect: {
+      login: '/login',
+      logout: '/',
+      callback: '/login',
+      home: '/dashboard'
+    }
+  }
+,  
   
   /*
   ** Build configuration
